@@ -1,0 +1,115 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: FitRight AI - 36hr demo backend
+Globals:
+  Function:
+    Timeout: 30
+    Runtime: python3.11
+    MemorySize: 256
+Parameters:
+  Stage:
+    Type: String
+    Default: dev
+Resources:
+  ProfilesTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName:
+        Fn::Sub: fitright-${Stage}-Profiles
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+      - AttributeName: profileId
+        AttributeType: S
+      KeySchema:
+      - AttributeName: profileId
+        KeyType: HASH
+  FeedbackTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName:
+        Fn::Sub: fitright-${Stage}-Feedback
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+      - AttributeName: feedbackId
+        AttributeType: S
+      KeySchema:
+      - AttributeName: feedbackId
+        KeyType: HASH
+  Api:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      StageName:
+        Ref: Stage
+      CorsConfiguration:
+        AllowOrigins:
+        - '*'
+        AllowMethods:
+        - GET
+        - POST
+        - OPTIONS
+        AllowHeaders:
+        - Content-Type
+        - Authorization
+  OrchestratorFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName:
+        Fn::Sub: fitright-${Stage}-orchestrator
+      CodeUri: OrchestratorFunction
+      Handler: handler.lambda_handler
+      Environment:
+        Variables:
+          PROFILES_TABLE:
+            Ref: ProfilesTable
+          FEEDBACK_TABLE:
+            Ref: FeedbackTable
+          BEDROCK_MODEL_ID: anthropic.claude-3-5-haiku-20241022-v2:0
+      Policies:
+      - DynamoDBCrudPolicy:
+          TableName:
+            Ref: ProfilesTable
+      - DynamoDBCrudPolicy:
+          TableName:
+            Ref: FeedbackTable
+      - Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+          - bedrock:InvokeModel
+          Resource: '*'
+      Events:
+        PostProfiles:
+          Type: HttpApi
+          Properties:
+            ApiId:
+              Ref: Api
+            Path: /profiles
+            Method: post
+        PostRecommendations:
+          Type: HttpApi
+          Properties:
+            ApiId:
+              Ref: Api
+            Path: /recommendations
+            Method: post
+        PostFeedback:
+          Type: HttpApi
+          Properties:
+            ApiId:
+              Ref: Api
+            Path: /feedback
+            Method: post
+    Metadata:
+      BuildMethod: python3.11
+      SamResourceId: OrchestratorFunction
+Outputs:
+  ApiEndpoint:
+    Description: API base URL (no trailing slash)
+    Value:
+      Fn::Sub: https://${Api}.execute-api.${AWS::Region}.amazonaws.com/${Stage}
+  ProfilesTableName:
+    Value:
+      Ref: ProfilesTable
+  FeedbackTableName:
+    Value:
+      Ref: FeedbackTable

@@ -1,6 +1,0 @@
-.aws-sam/
-__pycache__/
-*.pyc
-.env
-*.zip
-node_modules/

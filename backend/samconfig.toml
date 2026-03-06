@@ -1,0 +1,15 @@
+version = 0.1
+
+[default.deploy.parameters]
+stack_name = "fitright"
+region = "ap-south-1"
+capabilities = "CAPABILITY_IAM"
+confirm_changeset = true
+resolve_s3 = true
+parameter_overrides = "Stage=\"dev\""
+s3_prefix = "fitright"
+disable_rollback = true
+image_repositories = []
+
+[default.global.parameters]
+region = "ap-south-1"
