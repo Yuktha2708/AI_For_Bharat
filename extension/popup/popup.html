@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>FitRight AI</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { width: 320px; padding: 12px; font-family: system-ui, sans-serif; font-size: 13px; margin: 0; }
+    h1 { font-size: 16px; margin: 0 0 12px; }
+    label { display: block; margin-top: 8px; font-weight: 500; }
+    input, select { width: 100%; padding: 6px 8px; margin-top: 2px; }
+    button { width: 100%; padding: 10px; margin-top: 16px; background: #2563eb; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; }
+    button:hover { background: #1d4ed8; }
+    button:disabled { background: #94a3b8; cursor: not-allowed; }
+    .success { color: #059669; margin-top: 12px; }
+    .error { color: #dc2626; margin-top: 8px; font-size: 12px; }
+    .link { margin-top: 12px; }
+    .link a { color: #2563eb; }
+    #onboarding { display: block; }
+    #saved { display: none; }
+  </style>
+</head>
+<body>
+  <div id="onboarding">
+    <h1>FitRight AI</h1>
+    <div id="apiBlock">
+      <label>API base URL (e.g. https://xxx.execute-api.region.amazonaws.com/dev)</label>
+      <input type="url" id="apiBase" placeholder="https://...">
+    </div>
+    <p>Enter your measurements (cm) and fit preference.</p>
+    <form id="form">
+      <label>Height (cm)</label>
+      <input type="number" name="height" step="0.1" min="1" required>
+      <label>Weight (kg)</label>
+      <input type="number" name="weight" step="0.1" min="1" required>
+      <label>Bust (cm)</label>
+      <input type="number" name="bust" step="0.1" min="1" required>
+      <label>Waist (cm)</label>
+      <input type="number" name="waist" step="0.1" min="1" required>
+      <label>Hips (cm)</label>
+      <input type="number" name="hips" step="0.1" min="1" required>
+      <label>Fit preference</label>
+      <select name="fitPreference">
+        <option value="snug">Snug</option>
+        <option value="regular" selected>Regular</option>
+        <option value="relaxed">Relaxed</option>
+      </select>
+      <button type="submit" id="submitBtn">Create profile</button>
+    </form>
+    <div id="msg" class="error"></div>
+  </div>
+  <div id="saved">
+    <h1>FitRight AI</h1>
+    <p>Profile saved. Open a demo product page and click <strong>Get recommendation</strong>.</p>
+    <div class="link"><a href="#" id="demoLink">Demo: Classic Tee (runs small)</a></div>
+    <div class="link"><a href="#" id="demoLink2">Demo: Hoodie (runs large)</a></div>
+    <div id="msg2" class="error"></div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>

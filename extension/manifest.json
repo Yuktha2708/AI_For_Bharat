@@ -1,0 +1,25 @@
+{
+  "manifest_version": 3,
+  "name": "FitRight AI",
+  "version": "1.0.0",
+  "description": "Size and color recommendations for online fashion",
+  "permissions": ["storage"],
+  "host_permissions": ["<all_urls>", "http://localhost/*", "file:///*"],
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_title": "FitRight AI"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content/content.js"],
+      "css": ["content/content.css"]
+    }
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "web_accessible_resources": [
+    { "resources": ["demo/*.html"], "matches": ["<all_urls>"] }
+  ]
+}
