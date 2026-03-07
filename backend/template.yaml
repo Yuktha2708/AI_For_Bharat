@@ -63,7 +63,7 @@ Resources:
         Variables:
           PROFILES_TABLE: !Ref ProfilesTable
           FEEDBACK_TABLE: !Ref FeedbackTable
-          BEDROCK_MODEL_ID: anthropic.claude-3-5-haiku-20241022-v2:0
+          BEDROCK_MODEL_ID: !Sub 'arn:aws:bedrock:${AWS::Region}:${AWS::AccountId}:inference-profile/global.amazon.nova-2-lite-v1:0'
       Policies:
         - DynamoDBCrudPolicy:
             TableName: !Ref ProfilesTable
@@ -74,6 +74,11 @@ Resources:
             - Effect: Allow
               Action:
                 - bedrock:InvokeModel
+              Resource: "*"
+            - Effect: Allow
+              Action:
+                - aws-marketplace:ViewSubscriptions
+                - aws-marketplace:Subscribe
               Resource: "*"
       Events:
         PostProfiles:

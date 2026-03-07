@@ -1,6 +1,6 @@
 """
 Bedrock: review -> structured JSON (fit signals), recommendation explanation.
-Uses Claude Haiku; parse-validate-retry on invalid JSON.
+Uses Converse API (e.g. Amazon Nova 2 Lite inference profile); parse-validate-retry on invalid JSON.
 """
 import json
 import os
@@ -8,7 +8,10 @@ from typing import Optional
 import boto3
 from botocore.exceptions import ClientError
 
-BEDROCK_MODEL_ID = os.environ.get("BEDROCK_MODEL_ID", "anthropic.claude-3-5-haiku-20241022-v2:0")
+BEDROCK_MODEL_ID = os.environ.get(
+    "BEDROCK_MODEL_ID",
+    "arn:aws:bedrock:ap-south-1:046971095960:inference-profile/global.amazon.nova-2-lite-v1:0",
+)
 BEDROCK_REGION = os.environ.get("AWS_REGION", "us-east-1")
 client = boto3.client("bedrock-runtime", region_name=BEDROCK_REGION)
 
@@ -16,24 +19,25 @@ MAX_REVIEW_CHARS = 5000
 
 
 def _invoke(prompt: str, system: str = "", max_tokens: int = 1024) -> str:
-    body = {
-        "anthropic_version": "bedrock-2023-05-31",
-        "max_tokens": max_tokens,
-        "messages": [{"role": "user", "content": prompt}],
+    """Call Bedrock Converse API; return assistant text."""
+    messages = [{"role": "user", "content": [{"text": prompt}]}]
+    kwargs = {
+        "modelId": BEDROCK_MODEL_ID,
+        "messages": messages,
+        "inferenceConfig": {"maxTokens": max_tokens, "temperature": 0.3},
     }
     if system:
-        body["system"] = system
-    resp = client.invoke_model(
-        modelId=BEDROCK_MODEL_ID,
-        contentType="application/json",
-        accept="application/json",
-        body=json.dumps(body),
-    )
-    out = json.loads(resp["body"].read().decode())
+        kwargs["system"] = [{"text": system}]
+    # Nova 2 Lite optional reasoning config
+    if "nova" in BEDROCK_MODEL_ID.lower():
+        kwargs["additionalModelRequestFields"] = {
+            "reasoningConfig": {"type": "enabled", "maxReasoningEffort": "low"},
+        }
+    resp = client.converse(**kwargs)
     text = ""
-    for block in out.get("content", []):
-        if block.get("type") == "text":
-            text += block.get("text", "")
+    for block in resp.get("output", {}).get("message", {}).get("content", []):
+        if "text" in block:
+            text += block["text"]
     return text.strip()
 
 
@@ -79,9 +83,13 @@ Return ONLY valid JSON with this exact structure:
     try:
         data = _extract_json(out)
     except json.JSONDecodeError:
-        data = _invoke(user + "\nRemember: output only the JSON object, no other text.", system=system, max_tokens=512)
+        out = _invoke(
+            user + "\nRemember: output only the JSON object, no other text.",
+            system=system,
+            max_tokens=512,
+        )
         try:
-            data = _extract_json(data)
+            data = _extract_json(out)
         except json.JSONDecodeError:
             data = {
                 "fit_verdict": "unknown",
