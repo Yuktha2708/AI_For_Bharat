@@ -142,3 +142,93 @@ Write JSON with:
     if "caution" not in data or not isinstance(data["caution"], str):
         data["caution"] = "Color and fit can vary. Check return policy."
     return data
+
+
+def _invoke_with_image(
+    image_bytes: bytes,
+    image_format: str,
+    prompt: str,
+    system: str = "",
+    max_tokens: int = 512,
+) -> str:
+    """Call Bedrock Converse API with image + text; return assistant text."""
+    content = [
+        {"image": {"format": image_format, "source": {"bytes": image_bytes}}},
+        {"text": prompt},
+    ]
+    messages = [{"role": "user", "content": content}]
+    kwargs = {
+        "modelId": BEDROCK_MODEL_ID,
+        "messages": messages,
+        "inferenceConfig": {"maxTokens": max_tokens, "temperature": 0.2},
+    }
+    if system:
+        kwargs["system"] = [{"text": system}]
+    if "nova" in BEDROCK_MODEL_ID.lower():
+        kwargs["additionalModelRequestFields"] = {
+            "reasoningConfig": {"type": "enabled", "maxReasoningEffort": "low"},
+        }
+    resp = client.converse(**kwargs)
+    text = ""
+    for block in resp.get("output", {}).get("message", {}).get("content", []):
+        if "text" in block:
+            text += block["text"]
+    return text.strip()
+
+
+def analyze_skin_from_image(image_bytes: bytes, image_format: str = "jpeg") -> dict:
+    """Analyze face image; return skinTone, undertone, summary. No image stored."""
+    system = "You are a skin analysis assistant. Return ONLY valid JSON, no markdown."
+    prompt = """Analyze this face photo for makeup shade matching. Consider skin tone and undertone only.
+Return ONLY valid JSON with this exact structure:
+{
+  "skinTone": "fair|light|medium|tan|deep|rich",
+  "undertone": "warm|cool|neutral",
+  "summary": "One short sentence describing the complexion for makeup matching."
+}"""
+    out = _invoke_with_image(image_bytes, image_format, prompt, system=system, max_tokens=256)
+    try:
+        data = _extract_json(out)
+    except json.JSONDecodeError:
+        data = {"skinTone": "medium", "undertone": "neutral", "summary": "Unable to analyze; using default."}
+    for key in ("skinTone", "undertone", "summary"):
+        if key not in data or not isinstance(data[key], str):
+            data[key] = "medium" if key == "skinTone" else "neutral" if key == "undertone" else "See shade guide."
+    return data
+
+
+def recommend_shade_for_complexion(
+    skin_profile: dict,
+    shades: list,
+    product_type: str = "makeup",
+) -> dict:
+    """Recommend shade(s) that suit the user's complexion. Returns recommended_shade, alternate_shades, reasons, caution."""
+    if not shades:
+        return {"recommended_shade": None, "alternate_shades": [], "reasons": [], "caution": "No shades provided."}
+    shades_text = "\n".join(f"- {s}" for s in shades[:50])
+    system = "You are a makeup advisor. Suggest which shade suits the complexion. Return ONLY valid JSON, no markdown."
+    user = f"""User complexion: skinTone={skin_profile.get('skinTone')}, undertone={skin_profile.get('undertone')}. Summary: {skin_profile.get('summary', '')}
+Product type: {product_type}
+Available shades:
+{shades_text}
+
+Pick the best matching shade and 1-2 alternates. Return ONLY valid JSON:
+{{
+  "recommended_shade": "exact shade name from the list",
+  "alternate_shades": ["alt1", "alt2"],
+  "reasons": ["reason1", "reason2", "reason3"],
+  "caution": "One short disclaimer about lighting and screen."
+}}"""
+    out = _invoke(user, system=system, max_tokens=512)
+    try:
+        data = _extract_json(out)
+    except json.JSONDecodeError:
+        data = {
+            "recommended_shade": shades[0] if shades else None,
+            "alternate_shades": shades[1:3] if len(shades) > 1 else [],
+            "reasons": ["Based on your complexion.", "Try in person if possible.", "Lighting may vary."],
+            "caution": "Color may vary by screen and lighting.",
+        }
+    if not data.get("recommended_shade") and shades:
+        data["recommended_shade"] = shades[0]
+    return data

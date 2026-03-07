@@ -18,6 +18,11 @@
     .link a { color: #2563eb; }
     #onboarding { display: block; }
     #saved { display: none; }
+    .skin-section { margin-top: 16px; padding-top: 12px; border-top: 1px solid #e2e8f0; }
+    .skin-section input[type="file"] { font-size: 12px; }
+    .skin-section button { margin-top: 8px; background: #7c3aed; }
+    .skin-section button:hover { background: #6d28d9; }
+    .skin-section .done { color: #059669; font-size: 12px; margin-top: 6px; }
   </style>
 </head>
 <body>
@@ -51,10 +56,20 @@
   </div>
   <div id="saved">
     <h1>FitRight AI</h1>
-    <p>Profile saved. To see <strong>Get recommendation</strong>, open the demo page from your project folder (Chrome won’t show the button on extension pages):</p>
-    <p style="font-size: 11px; color: #64748b;">File → Open File → choose <code>extension/demo/product.html</code> (or <code>product2.html</code>) in this project.</p>
+    <p>Profile saved. Add a face photo below for makeup shade recommendations (optional). To see <strong>Get recommendation</strong>, open the demo page from your project folder (Chrome won’t show the button on extension pages):</p>
+    <div class="skin-section">
+      <label id="facePhotoLabel">Face photo (for shade matching)</label>
+      <input type="file" id="facePhoto" accept="image/jpeg,image/png">
+      <button type="button" id="skinAnalyzeBtn">Analyze and save skin profile</button>
+      <div id="skinMsg" class="error"></div>
+      <div id="skinDone" class="done" style="display:none">Skin profile saved.</div>
+    </div>
+    <p style="margin-top: 12px;">Open a demo page (File then Open File):</p>
     <div class="link"><a href="#" id="demoLink">Demo: Classic Tee (runs small)</a></div>
     <div class="link"><a href="#" id="demoLink2">Demo: Hoodie (runs large)</a></div>
+    <div class="link"><a href="#" id="demoMakeupLink">Demo: Foundation (shade)</a></div>
+    <div class="link"><a href="#" id="demoLipstickLink">Demo: Lipstick (shade)</a></div>
+    <p style="font-size: 11px; color: #64748b; margin-top: 8px;">On supported retail sites the panel can appear on product pages; data may be partial until we add site-specific scrapers.</p>
     <div id="msg2" class="error"></div>
   </div>
   <script src="popup.js"></script>

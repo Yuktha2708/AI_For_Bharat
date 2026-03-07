@@ -22,7 +22,8 @@ A `samconfig.toml` is included (stack `fitright`, region `ap-south-1`). To chang
 ## Endpoints
 
 - `POST /profiles` — body: `{ "measurements": { "height", "weight", "bust", "waist", "hips" }, "fitPreference": "snug|regular|relaxed" }` → `{ "profileId": "uuid" }`
-- `POST /recommendations` — body: `{ "profileId", "productContext": { "brand", "category", "sizeChart", "listedColor", ... }, "reviews": ["..."] }` → size + reasons + caution + color
+- `POST /skin-analysis` — body: `{ "profileId", "imageBase64": "<base64>", "imageFormat": "jpeg"|"png" }` → `{ "skinProfile": { "skinTone", "undertone", "summary" } }`. No image stored; profile is updated with skin profile for shade recommendations.
+- `POST /recommendations` — body: `{ "profileId", "productContext": { "brand", "category", "sizeChart", "listedColor", "shades": ["Shade A", ...], "productType": "makeup"|"foundation" }, "reviews": ["..."] }` → size (when size chart/reviews present) and/or `recommended_shade`, `shade_alternates`, `shade_reasons`, `shade_caution` (when product has `shades` and profile has `skinProfile`).
 - `POST /feedback` — body: `{ "profileId", "rating", "productContext" }` → `{ "feedbackId" }`
 
 ## Test with curl

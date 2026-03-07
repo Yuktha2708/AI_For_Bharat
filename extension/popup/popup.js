@@ -19,10 +19,25 @@ document.addEventListener('DOMContentLoaded', () => {
   const demoLink = document.getElementById('demoLink');
 
   const apiBaseInput = document.getElementById('apiBase');
-  chrome.storage.local.get(['profileId', 'apiBase'], (data) => {
+  chrome.storage.local.get(['profileId', 'apiBase', 'skinProfileSaved'], (data) => {
     if (data.profileId) {
       onboarding.style.display = 'none';
       saved.style.display = 'block';
+      if (data.skinProfileSaved) {
+        const skinDone = document.getElementById('skinDone');
+        const facePhoto = document.getElementById('facePhoto');
+        const skinAnalyzeBtn = document.getElementById('skinAnalyzeBtn');
+        const skinMsg = document.getElementById('skinMsg');
+        if (skinDone) {
+          skinDone.style.display = 'block';
+          skinDone.textContent = 'Skin profile saved ✓ You can get shade recommendations on makeup pages.';
+        }
+        const facePhotoLabel = document.getElementById('facePhotoLabel');
+        if (facePhotoLabel) facePhotoLabel.style.display = 'none';
+        if (facePhoto) facePhoto.style.display = 'none';
+        if (skinAnalyzeBtn) skinAnalyzeBtn.style.display = 'none';
+        if (skinMsg) skinMsg.style.display = 'none';
+      }
     }
     if (data.apiBase) {
       setApiBase(data.apiBase);
@@ -44,6 +59,89 @@ document.addEventListener('DOMContentLoaded', () => {
     demoLink2.addEventListener('click', (e) => {
       e.preventDefault();
       chrome.tabs.create({ url: chrome.runtime.getURL('demo/product2.html') });
+    });
+  }
+  const demoMakeupLink = document.getElementById('demoMakeupLink');
+  if (demoMakeupLink) {
+    demoMakeupLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      chrome.tabs.create({ url: chrome.runtime.getURL('demo/makeup.html') });
+    });
+  }
+  const demoLipstickLink = document.getElementById('demoLipstickLink');
+  if (demoLipstickLink) {
+    demoLipstickLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      chrome.tabs.create({ url: chrome.runtime.getURL('demo/lipstick.html') });
+    });
+  }
+
+  const facePhoto = document.getElementById('facePhoto');
+  const skinAnalyzeBtn = document.getElementById('skinAnalyzeBtn');
+  const skinMsg = document.getElementById('skinMsg');
+  const skinDone = document.getElementById('skinDone');
+  if (skinAnalyzeBtn && facePhoto) {
+    skinAnalyzeBtn.addEventListener('click', async () => {
+      const file = facePhoto.files[0];
+      if (!file) {
+        skinMsg.textContent = 'Choose a face photo first.';
+        skinMsg.style.display = 'block';
+        skinDone.style.display = 'none';
+        return;
+      }
+      const base = (apiBaseInput && apiBaseInput.value.trim()) || getApiBase();
+      if (!base) {
+        skinMsg.textContent = 'Set API base URL first.';
+        skinMsg.style.display = 'block';
+        skinDone.style.display = 'none';
+        return;
+      }
+      let profileId;
+      try {
+        const d = await new Promise((resolve) => chrome.storage.local.get(['profileId'], resolve));
+        profileId = d.profileId;
+      } catch (_) {}
+      if (!profileId) {
+        skinMsg.textContent = 'Create a profile first.';
+        skinMsg.style.display = 'block';
+        skinDone.style.display = 'none';
+        return;
+      }
+      skinMsg.textContent = '';
+      skinDone.style.display = 'none';
+      skinAnalyzeBtn.disabled = true;
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          let b64 = reader.result;
+          if (b64.indexOf('base64,') !== -1) b64 = b64.split('base64,')[1];
+          const imageFormat = file.type === 'image/png' ? 'png' : 'jpeg';
+          fetch(`${base.replace(/\/$/, '')}/skin-analysis`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ profileId, imageBase64: b64, imageFormat }),
+          })
+            .then((res) => res.json())
+            .then((data) => {
+              skinAnalyzeBtn.disabled = false;
+              if (data.error) {
+                skinMsg.textContent = data.error;
+                skinMsg.style.display = 'block';
+                return;
+              }
+              skinMsg.style.display = 'none';
+              skinDone.style.display = 'block';
+              skinDone.textContent = 'Skin profile saved. Get shade recommendations on makeup pages.';
+              chrome.storage.local.set({ skinProfileSaved: true });
+            })
+            .catch((e) => {
+              skinAnalyzeBtn.disabled = false;
+              skinMsg.textContent = e.message || 'Request failed';
+              skinMsg.style.display = 'block';
+            });
+        };
+        reader.readAsDataURL(file);
+      });
     });
   }
 

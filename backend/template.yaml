@@ -99,6 +99,12 @@ Resources:
             ApiId: !Ref Api
             Path: /feedback
             Method: post
+        PostSkinAnalysis:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref Api
+            Path: /skin-analysis
+            Method: post
     Metadata:
       BuildMethod: python3.11
 
