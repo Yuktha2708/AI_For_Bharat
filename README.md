@@ -13,24 +13,24 @@ Size and color recommendations for online fashion: Chrome extension + serverless
 - PPT- https://github.com/Yuktha2708/AI_For_Bharat/blob/main/Prototype%20Development%20Submission%20_%20AWS%20AI%20for%20Bharat%20Hackathon.pdf
 
 ## Amazon Product link to try on
-- Clothe- https://www.amazon.in/VERO-MODA-Shirt-109675501_Lime-Green_XS_/dp/B0BXH34MMD/ref=sr_1_5?dib=eyJ2IjoiMSJ9.6hq7L8WzYmqJ1DvpFCuQsuMSub8IpnQlsS_uFWRsho2lO6iTpm1heO3hC2SA6l3UEeQTCNmJFANTlfU3N2CPnuv_VjA8Uojq1JiTNgbf0jx2-pL4Le4N-ImGo3y3Tars2YWgYPUZmbr9oLL6hQ7NrfT__eryVILO43FHFaINej7oiKXkGVpQu2g2e9Gksgrg-jrH6TVXENzo8MULRMbskna6nAM_iOyFZWJqTwB14SDypuOMgbXIbideg761EmXGCCGqVcs0_dBTo33gysMI22fY7UpIjh4bKjXi-24EseM.zKfrhbILwhkSpkEzE8r_qIcIhXl4mQ2m478XAlJ8MnE&dib_tag=se&pf_rd_i=1953602031&pf_rd_m=A1VBAL9TL5WCBF&pf_rd_s=center-1%2Cmobile-hybrid-10%2Cmobile-hybrid-14&pf_rd_t=101%2C30901%2C30901&qid=1772974769&refinements=p_85%3A10440599031%2Cp_n_pct-off-with-tax%3A2665401031%2Cp_36%3A60000-%2Cp_72%3A1318477031%2Cp_89%3AAND%7CAllen%2BSolly%7CBewakoof%7CCOVER%2BSTORY%7CCalvin%2BKlein%7CFabAlley%7CGlobus%7CJanasya%7CKazo%7CLabel%2BRITU%2BKUMAR%7CLacoste%7CLevi%27s%7CMadame%7CMarks%2B%26%2BSpencer%7CMiss%2BChase%7CONLY%7CRARE%7CSpykar%7CTommy%2BHilfiger%7CUNITED%2BCOLORS%2BOF%2BBENETTON%7CUnited%2BColors%2Bof%2BBenetton%7CVERO%2BMODA%7CVan%2BHeusen%7CWrangler%7Cthe%2Blabel%2Blife&rnid=3837712031&rps=1&s=apparel&sr=1-5&th=1&psc=1
-- Foundation- https://www.amazon.in/Lakme-Primer-Matte-Perfect-Foundation/dp/B07YVHD3DB/ref=sr_1_25?dib=eyJ2IjoiMSJ9.n3W19wbMV5rtK3mGDPVEKjm3WSp_2kM2MRWhs4g0kX0ETB78QRsVx7f4EUHDh2AVPolsLGLBAm_khsj7dGfLMbp8Vfqd3CtjIw6Rf7RRHE4O8FkDglb9q8yq90AgMIvCUiAjnf9RIzaRI1d_dAdZkbYZoPtF-zEZBZDUzsPnXSVvdO8Ui8rQus_F8mUoCcI8I1tUUkwOfK9kfylgJoSRxZZxbD0mJmxYUAu0KHg-B6FZBQjabiy6YZbCCMzMBiZ5mUlUNHjlmPBXJWunjYhuUzS5oJ3AGIguIQbraGTZYO8.rjc0uY272JK9cpqqksVqb_qRKVZOGeSEPqXyBz5_EaI&dib_tag=se&pf_rd_i=1374371031&pf_rd_m=A1VBAL9TL5WCBF&pf_rd_s=merchandised-search-4&qid=1772975784&refinements=p_85%3A10440599031&rps=1&s=beauty&sr=1-25&th=1
-- Lipstick- https://www.amazon.in/Lakme-Lipstick-Burgundy-Passion-Matte/dp/B08N7V6S7D/ref=sr_1_24_sspa?dib=eyJ2IjoiMSJ9.viFW1Mgam6pAxgnzy8nbrYGFvU0YoM6WmX8WdckqOtb7q8II0EqIPGTRshWxmHqdAWAjnfCzCUYGI2Happ9mWi2xKnkM1CYD0-vWESso53eAqKCCaEdusABlV1UE8CS80D03PyF3Z-p4Oef67Tbm_aSdIe71jmieDwTFunJxfi02HWFe65d5vckIypZvx5Azz6Hd2rW-d8aAaf_kGhS9orRAXku95LXCPKYo1o-LfUI7LhdoysTP-SNKxE7jt6ipcqgB3MO95q4Zhbla3JuMK8N-BdRLOB0m2R0z-l065Rs.iPFKifDT1fEbYiXEb8EQcvvwvzVH53rrnsIXqamGYoQ&dib_tag=se&pf_rd_i=1374379031&pf_rd_m=A1VBAL9TL5WCBF&pf_rd_s=merchandised-search-4&qid=1772975862&refinements=p_85%3A10440599031%2Cp_28%3A-spons&rps=1&s=beauty&sr=1-24-spons&aref=6quu7X98bb&sp_csd=d2lkZ2V0TmFtZT1zcF9tdGZfYnJvd3Nl&th=1
+- Appareal- https://amzn.in/d/06ECBXwv
+- Foundation- https://www.amazon.in/Lakme-Primer-Matte-Perfect-Foundation/dp/B07YVHD3DB/ref=sr_1_25?rps=1&s=beauty&sr=1-25
+- Lipstick- https://www.amazon.in/Lakme-Lipstick-Burgundy-Passion-Matte/dp/B08N7V6S7D/ref=sr_1_24_sspa?rps=1&s=beauty&sr=1-24-spons&aref=6quu7X98bb&sp_csd=d2lkZ2V0TmFtZT1zcF9tdGZfYnJvd3Nl
 
 ## Quick start
 How to test (evaluators)
 Note: This extension is not on the Chrome Web Store. Install it from the project source (see below).
 
-Install the Chrome extension from source
-Clone or download this repo. In Chrome go to chrome://extensions → turn on Developer mode (top right) → Load unpacked → select the extension folder inside the project. The FitRight AI icon will appear in the toolbar.
-Create a profile & set API URL
-Click the FitRight AI icon in the toolbar. Enter the API base URL "https://u7isurjq51.execute-api.ap-south-1.amazonaws.com/dev" Enter your measurements (height, weight, bust, waist, hips) and fit preference, then click “Create profile”. Optionally add a face photo and click “Analyze and save skin profile” for makeup shade recommendations.
-Try the demo pages (this site)
-With the extension installed, open any demo link below. You should see a FitRight AI panel at the top with a “Get recommendation” button. Click it to get a size or shade recommendation.
-Try on Amazon.in (optional)
-Go to a product page on Amazon.in (e.g. a kurta or a lipstick). The FitRight panel appears on product pages. Click “Get recommendation” for size (apparel) or shade (makeup).
-Demo pages (use with extension)
-These pages work when the FitRight AI extension is installed and the API URL is set. Click a link below, then click Get recommendation in the panel.
+- Install the Chrome extension from source
+- Clone or download this repo. In Chrome go to chrome://extensions → turn on Developer mode (top right) → Load unpacked → select the extension folder inside the project. The FitRight AI icon will appear in the toolbar.
+- Create a profile & set API URL
+- Click the FitRight AI icon in the toolbar. Enter the API base URL "https://u7isurjq51.execute-api.ap-south-1.amazonaws.com/dev" Enter your measurements (height, weight, bust, waist, hips) and fit preference, then click “Create profile”. Optionally add a face photo and click “Analyze and save skin profile” for makeup shade recommendations.
+- Try the demo pages (this site)
+- With the extension installed, open any demo link below. You should see a FitRight AI panel at the top with a “Get recommendation” button. Click it to get a size or shade recommendation.
+- Try on Amazon.in (optional)
+- Go to a product page on Amazon.in (e.g. a kurta or a lipstick). The FitRight panel appears on product pages. Click “Get recommendation” for size (apparel) or shade (makeup).
+- Demo pages (use with extension)
+- These pages work when the FitRight AI extension is installed and the API URL is set. Click a link below, then click Get recommendation in the panel.
 
 ## Tech Stuff
 ### 1. Backend (AWS)
