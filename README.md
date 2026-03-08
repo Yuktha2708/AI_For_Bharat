@@ -1,6 +1,8 @@
-# FitRight AI — 36-Hour Demo Prototype
+# FitRight AI ✅
 
 Size and color recommendations for online fashion: Chrome extension + serverless backend (Lambda, Bedrock, DynamoDB, API Gateway).
+
+PS: This was a fantastic learning experience. I really enjoyed the challenge of building this out alongside my core tasks and I'm happy to see it live. Thanks for the opportunity!
 
 ## Essential Links
 - API link as input for extension- https://u7isurjq51.execute-api.ap-south-1.amazonaws.com/dev
@@ -13,9 +15,15 @@ Size and color recommendations for online fashion: Chrome extension + serverless
 - PPT- https://github.com/Yuktha2708/AI_For_Bharat/blob/main/Prototype%20Development%20Submission%20_%20AWS%20AI%20for%20Bharat%20Hackathon.pdf
 
 ## Amazon Product link to try on
-- Appareal- https://amzn.in/d/06ECBXwv
-- Foundation- https://www.amazon.in/Lakme-Primer-Matte-Perfect-Foundation/dp/B07YVHD3DB/ref=sr_1_25?rps=1&s=beauty&sr=1-25
-- Lipstick- https://www.amazon.in/Lakme-Lipstick-Burgundy-Passion-Matte/dp/B08N7V6S7D/ref=sr_1_24_sspa?rps=1&s=beauty&sr=1-24-spons&aref=6quu7X98bb&sp_csd=d2lkZ2V0TmFtZT1zcF9tdGZfYnJvd3Nl
+- Apparels-
+-- https://amzn.in/d/06ECBXwv
+-- https://amzn.in/d/02Y5dqMf
+- Foundation-
+-- https://amzn.in/d/07v8nG9u
+-- https://amzn.in/d/054yznpL
+- Lipstick-
+-- https://amzn.in/d/05RHpBPh
+-- https://amzn.in/d/05tuoGFI
 
 ## Quick start
 How to test (evaluators)
