@@ -2,8 +2,32 @@
 
 Size and color recommendations for online fashion: Chrome extension + serverless backend (Lambda, Bedrock, DynamoDB, API Gateway).
 
-## Quick start
+## Essential Links
+- API link as input for extension- https://u7isurjq51.execute-api.ap-south-1.amazonaws.com/dev
+- Prototype- https://yuktha2708.github.io/AI_For_Bharat/
+- Demo product 1- https://yuktha2708.github.io/AI_For_Bharat/demo/product.html
+- Demo product 2- https://yuktha2708.github.io/AI_For_Bharat/demo/product2.html
+- Demo makeup product- https://yuktha2708.github.io/AI_For_Bharat/demo/makeup.html
+- Demo makeup product- https://yuktha2708.github.io/AI_For_Bharat/demo/lipstick.html
+- Demo/ppt Video-
+- PPT- 
 
+## Quick start
+How to test (evaluators)
+Note: This extension is not on the Chrome Web Store. Install it from the project source (see below).
+
+Install the Chrome extension from source
+Clone or download this repo. In Chrome go to chrome://extensions → turn on Developer mode (top right) → Load unpacked → select the extension folder inside the project. The FitRight AI icon will appear in the toolbar.
+Create a profile & set API URL
+Click the FitRight AI icon in the toolbar. Enter the API base URL "https://u7isurjq51.execute-api.ap-south-1.amazonaws.com/dev" Enter your measurements (height, weight, bust, waist, hips) and fit preference, then click “Create profile”. Optionally add a face photo and click “Analyze and save skin profile” for makeup shade recommendations.
+Try the demo pages (this site)
+With the extension installed, open any demo link below. You should see a FitRight AI panel at the top with a “Get recommendation” button. Click it to get a size or shade recommendation.
+Try on Amazon.in (optional)
+Go to a product page on Amazon.in (e.g. a kurta or a lipstick). The FitRight panel appears on product pages. Click “Get recommendation” for size (apparel) or shade (makeup).
+Demo pages (use with extension)
+These pages work when the FitRight AI extension is installed and the API URL is set. Click a link below, then click Get recommendation in the panel.
+
+## Tech Stuff
 ### 1. Backend (AWS)
 
 - Enable **Claude 3.5 Haiku** in [Bedrock](https://console.aws.amazon.com/bedrock/) → Model access (region e.g. `us-east-1`).
