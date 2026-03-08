@@ -9,8 +9,8 @@ Size and color recommendations for online fashion: Chrome extension + serverless
 - Demo product 2- https://yuktha2708.github.io/AI_For_Bharat/demo/product2.html
 - Demo makeup product- https://yuktha2708.github.io/AI_For_Bharat/demo/makeup.html
 - Demo makeup product- https://yuktha2708.github.io/AI_For_Bharat/demo/lipstick.html
-- Demo/ppt Video-
-- PPT- 
+- Demo Video- https://drive.google.com/file/d/1QckDgGkYFMyYpVeic3-xepZMJq-p29B4/view?usp=sharing
+- PPT- https://github.com/Yuktha2708/AI_For_Bharat/blob/main/Prototype%20Development%20Submission%20_%20AWS%20AI%20for%20Bharat%20Hackathon.pdf
 
 ## Quick start
 How to test (evaluators)
