@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FitRight AI – Working Prototype</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: system-ui, -apple-system, sans-serif; max-width: 720px; margin: 0 auto; padding: 32px 24px; line-height: 1.6; color: #1e293b; }
+    h1 { font-size: 28px; margin-bottom: 8px; }
+    .subtitle { color: #64748b; margin-bottom: 32px; }
+    h2 { font-size: 18px; margin-top: 28px; margin-bottom: 12px; }
+    ol, ul { margin: 0 0 16px; padding-left: 24px; }
+    li { margin-bottom: 6px; }
+    a { color: #2563eb; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; margin: 16px 0; }
+    .card h3 { margin: 0 0 8px; font-size: 16px; }
+    .card p { margin: 0; font-size: 14px; color: #475569; }
+    .links { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+    .links a { display: inline-block; padding: 10px 16px; background: #2563eb; color: white; border-radius: 8px; font-weight: 500; }
+    .links a:hover { background: #1d4ed8; text-decoration: none; }
+    code { background: #e2e8f0; padding: 2px 6px; border-radius: 4px; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <h1>FitRight AI – Working Prototype</h1>
+  <p class="subtitle">Size &amp; shade recommendations for apparel and makeup (e.g. Amazon.in)</p>
+
+  <h2>How to test (evaluators)</h2>
+  <p><strong>Note:</strong> This extension is not on the Chrome Web Store. Install it from the project source (see below).</p>
+  <ol>
+    <li><strong>Install the Chrome extension from source</strong><br>
+      Clone or download this repo. In Chrome go to <code>chrome://extensions</code> → turn on <strong>Developer mode</strong> (top right) → <strong>Load unpacked</strong> → select the <code>extension</code> folder inside the project. The FitRight AI icon will appear in the toolbar.</li>
+    <li><strong>Create a profile &amp; set API URL</strong><br>
+      Click the FitRight AI icon in the toolbar. Enter the <strong>API base URL</strong> (provided by the team or from your own deploy). Enter your measurements (height, weight, bust, waist, hips) and fit preference, then click “Create profile”. Optionally add a face photo and click “Analyze and save skin profile” for makeup shade recommendations.</li>
+    <li><strong>Try the demo pages (this site)</strong><br>
+      With the extension installed, open any demo link below. You should see a <strong>FitRight AI</strong> panel at the top with a “Get recommendation” button. Click it to get a size or shade recommendation.</li>
+    <li><strong>Try on Amazon.in (optional)</strong><br>
+      Go to a product page on Amazon.in (e.g. a kurta or a lipstick). The FitRight panel appears on product pages. Click “Get recommendation” for size (apparel) or shade (makeup).</li>
+  </ol>
+
+  <h2>Demo pages (use with extension)</h2>
+  <p>These pages work when the FitRight AI extension is installed and the API URL is set. Click a link below, then click <strong>Get recommendation</strong> in the panel.</p>
+  <div class="links">
+    <a href="demo/product.html">Size: Classic Tee (runs small)</a>
+    <a href="demo/product2.html">Size: Hoodie (runs large)</a>
+    <a href="demo/makeup.html">Shade: Foundation</a>
+    <a href="demo/lipstick.html">Shade: Lipstick</a>
+  </div>
+
+  <div class="card">
+    <h3>API URL</h3>
+    <p>If you are evaluating this prototype, the team should provide a deployed API base URL (e.g. from AWS SAM). Enter it in the extension popup before creating a profile and clicking “Get recommendation”.</p>
+  </div>
+</body>
+</html>

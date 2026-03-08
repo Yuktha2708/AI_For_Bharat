@@ -27,7 +27,7 @@
     var t = s.trim();
     if (t.length > 40 || t.length < 1) return false;
     if (/\{|\}|!important|#([0-9a-fA-F]{3,8})|px\b|₹|\d+\s*percent|savings|\.centralized|margin-|font-weight|!important/i.test(t)) return false;
-    if (/^\d+$/.test(t)) return false;
+    if (/^\d+$/.test(t)) return t.length >= 1 && t.length <= 5;
     return true;
   }
 
@@ -36,12 +36,22 @@
     if (!REAL_PRODUCT_HOSTS.some(function (h) { return host === h || host.endsWith('.' + h); })) return null;
     const pathname = window.location.pathname || '';
     if (!isProductDetailPage(host, pathname)) return null;
-    const titleEl = document.querySelector('h1, [data-product-name], .product-title, #productTitle, .pdp-title, .pdp-name');
+    var titleEl = document.querySelector('h1, [data-product-name], .product-title, #productTitle, .pdp-title, .pdp-name');
+    if (!titleEl && (host === 'amazon.in' || host.endsWith('.amazon.in'))) titleEl = document.querySelector('#title, .product-title-word-break, [data-cel-widget*="title"] #productTitle, [data-cel-widget*="title"]');
     const title = titleEl ? titleEl.textContent.trim().slice(0, 200) : '';
     const pageText = (document.body && document.body.innerText) ? document.body.innerText.slice(0, 3000) : '';
-    const isMakeupPage = /\b(highlighter|blush|eyeshadow|eyeliner|mascara|lip(stick| crayon| gloss| balm)?|foundation|concealer|makeup|compact|primer)\b|shade|colour|color\s*:/i.test(title + ' ' + pageText);
-    const isApparelPage = /\b(kurta|kurti|saree|sari|dress|shirt|pants|palazzo|ethnic\s*wear|clothing|dupatta|suit|lehenga|lehenga|blouse|top|jeans|trouser|jacket|coat|jumper)\b/i.test(title + ' ' + pageText.slice(0, 1500));
+    const docTitle = (typeof document.title === 'string') ? document.title : '';
+    var amazonProductText = '';
+    if (host === 'amazon.in' || host.endsWith('.amazon.in')) {
+      var main = document.querySelector('#ppd, #centerCol, #dp-container, #dp');
+      if (main) amazonProductText = (main.innerText || main.textContent || '').slice(0, 4000);
+    }
+    const textForType = title + ' ' + pageText.slice(0, 2000) + ' ' + docTitle + ' ' + pathname + ' ' + amazonProductText;
+    const isMakeupPage = /\b(highlighter|blush|eyeshadow|eyeliner|mascara|lip(stick| crayon| gloss| balm)?|liquid\s*lipstick|foundation|concealer|makeup|compact|primer|bb\s*cream|cc\s*cream|face\s*powder)\b/i.test(textForType);
     const onAmazon = host === 'amazon.in' || host.endsWith('.amazon.in');
+    const isMakeupFromUrl = onAmazon && /lipstick|foundation|concealer|highlighter|mascara|blush|eyeshadow|eyeliner|makeup|lip-stick|lipstick|primer|compact|bb-cream|cc-cream|face-powder|liquid-foundation|matte-foundation|cream-foundation/i.test(pathname);
+    var titleAndPath = title + ' ' + pathname;
+    const isApparelPage = !isMakeupFromUrl && !isMakeupPage && /\b(kurta|kurti|saree|sari|dress|shirt|pants|palazzo|ethnic\s*wear|clothing|dupatta|suit|lehenga|blouse|jeans|trouser|jacket|coat|jumper)\b/i.test(titleAndPath) || /\b(flared\s+top|crop\s+top|women'?s\s+top|men'?s\s+top)\b/i.test(titleAndPath);
     let brand = 'Unknown';
     const brandEl = document.querySelector('[data-brand], .pdp-brand, .product-brand, #bylineInfo, .pdp-product-brand');
     if (brandEl) brand = brandEl.textContent.trim().slice(0, 100);
@@ -64,33 +74,69 @@
         var amzSizeSelect = document.querySelector('#native_dropdown_selected_size_name, #dropdown_selected_size_name, [data-cel-widget*="size"] select, .po-size select');
         if (amzSizeSelect && amzSizeSelect.options) {
           var amzOpts = Array.from(amzSizeSelect.options).map(function (o) { return o.text.trim(); }).filter(Boolean);
-          var amzApparel = amzOpts.some(function (t) { return /^(XS|S|M|L|XL|XXL|\d{2,3}\s*cm|\d+)$/i.test(t) && !/\d+\s*(ml|g|oz)/i.test(t); });
+          var amzApparel = amzOpts.some(function (t) { return /^(XS|S|M|L|XL|XXL|2XL|3XL|\d{2,3}\s*cm|\d+)$/i.test(t) && !/\d+\s*(ml|g|oz)/i.test(t); });
           if (amzApparel && amzOpts.length) sizeChart = amzOpts.join('\n');
         }
         if (!sizeChart) {
-          var amzSizeBtns = document.querySelectorAll('.po-size .a-button-inner, [data-cel-widget*="size"] .a-button-inner, #variation_size_name .selection');
+          var amzSizeRe = /^(XS|S|M|L|XL|XXL|2XL|3XL)$/i;
+          var amzSizeBtns = document.querySelectorAll('.po-size .a-button-inner, .po-size .a-button-text, [data-cel-widget*="size"] .a-button-inner, [data-cel-widget*="size"] .a-button-text, #variation_size_name .selection, #variation_size_name .a-button-inner, #variation_size_name .a-button-text, #variation_size_name li a, #twisterContainer [id*="size"] .a-button-inner, #twisterContainer [id*="size"] .a-button-text');
           if (amzSizeBtns.length) {
             var btnTexts = Array.from(amzSizeBtns).map(function (b) { return b.textContent.trim(); }).filter(Boolean);
-            if (btnTexts.some(function (t) { return /^(XS|S|M|L|XL|XXL)$/i.test(t); })) sizeChart = btnTexts.join('\n');
+            if (btnTexts.some(function (t) { return amzSizeRe.test(t); })) sizeChart = btnTexts.filter(function (t) { return amzSizeRe.test(t); }).join('\n');
+          }
+        }
+        if (!sizeChart) {
+          var sizeSection = document.querySelector('#variation_size_name, [data-cel-widget*="twister"]');
+          if (sizeSection) {
+            var sizeNodes = sizeSection.querySelectorAll('a, button, span[class*="button"], li');
+            var collected = [];
+            sizeNodes.forEach(function (n) {
+              var t = n.textContent.trim();
+              if (/^(XS|S|M|L|XL|XXL|2XL|3XL)$/i.test(t) && collected.indexOf(t) === -1) collected.push(t);
+            });
+            if (collected.length) sizeChart = collected.join('\n');
           }
         }
       }
     }
+    var hasAmzColorVariation = onAmazon && !!document.querySelector('#variation_color_name, #variation_colour_name, [id*="variation_color"], [id*="variation_colour"]');
+    var hasAmzShadeVariation = onAmazon && !!document.querySelector('#variation_style_name, #variation_shade_name, [id*="variation_style"], [id*="variation_shade"], #native_dropdown_selected_style_name');
+    var isMakeupFromColorOnly = onAmazon && !sizeChart && (hasAmzColorVariation || hasAmzShadeVariation);
+    var treatAsMakeup = isMakeupPage || isMakeupFromColorOnly || isMakeupFromUrl;
     let reviews = [];
-    if (!isMakeupPage) {
+    if (!treatAsMakeup) {
       const reviewEls = document.querySelectorAll('[data-hook="review-body"], .review-text, .review-content, [class*="review"] p, .cr-original-review-content, .index-review-desc, [class*="Review"]');
       if (reviewEls.length) reviews = Array.from(reviewEls).slice(0, 25).map(function (el) { return el.textContent.trim().slice(0, 300); }).filter(Boolean);
     }
     var shades = [];
     if (onAmazon) {
-      if (isMakeupPage) {
-        var amzColorSelect = document.querySelector('#native_dropdown_selected_color_name, #variation_color_name select');
+      if (treatAsMakeup) {
+        var amzColorSelect = document.querySelector('#native_dropdown_selected_color_name, #variation_color_name select, #variation_colour_name select, [id*="variation_color"] select, [id*="variation_colour"] select, #native_dropdown_selected_style_name, #variation_style_name select, #variation_shade_name select, [id*="variation_style"] select, [id*="variation_shade"] select');
         if (amzColorSelect && amzColorSelect.options) {
           shades = Array.from(amzColorSelect.options).map(function (o) { return o.text.trim(); }).filter(Boolean);
         }
         if (!shades.length) {
-          var amzColorBtns = document.querySelectorAll('#variation_color_name .selection, #variation_color_name .a-button-inner');
+          var amzColorBtns = document.querySelectorAll('#variation_color_name .selection, #variation_color_name .a-button-inner, #variation_color_name .a-button-text, #variation_colour_name .selection, #variation_colour_name .a-button-inner, #variation_colour_name .a-button-text, [id*="variation_color"] .a-button-text, [id*="variation_colour"] .a-button-text, .po-color .a-button-inner, .po-color .a-button-text, #variation_style_name .selection, #variation_style_name .a-button-inner, #variation_style_name .a-button-text, #variation_shade_name .a-button-inner, #variation_shade_name .a-button-text, .po-style .a-button-inner, .po-style .a-button-text');
           if (amzColorBtns.length) shades = Array.from(amzColorBtns).map(function (b) { return b.textContent.trim(); }).filter(Boolean);
+        }
+        if (!shades.length) {
+          var amzColorLinks = document.querySelectorAll('#variation_color_name a, #variation_colour_name a, [id*="variation_color"] a, [id*="variation_colour"] a, #twisterContainer [id*="color"] a, #twisterContainer [id*="colour"] a');
+          if (amzColorLinks.length) {
+            shades = Array.from(amzColorLinks).map(function (a) { return a.textContent.trim(); }).filter(Boolean);
+          }
+        }
+        if (!shades.length) {
+          var colorSection = document.querySelector('#variation_color_name, #variation_colour_name, [id*="variation_color_name"], [id*="variation_colour_name"]');
+          if (colorSection) {
+            var allClickable = colorSection.querySelectorAll('a, button, [role="button"], span[class*="button"], li');
+            var seen = {};
+            allClickable.forEach(function (el) {
+              var t = el.textContent.trim();
+              if (t && t.length >= 2 && t.length <= 40 && !/^(See|Make a|Select|Choose|Image|—|–|-)$/i.test(t) && !/^See\s+/i.test(t) && !/^\d+\.?\d*\s*(g|ml|oz)/i.test(t)) {
+                if (!seen[t]) { seen[t] = true; shades.push(t); }
+              }
+            });
+          }
         }
       }
     } else {
@@ -112,10 +158,9 @@
     }
     shades = shades.filter(function (s) { return isValidShadeName(s); }).slice(0, 50);
     var hasData = sizeChart || shades.length || reviews.length;
-    var isProductPath = /\/(p|product|prd|pd)\//i.test(pathname) || /\/product\b/i.test(pathname);
-    if (!hasData && isProductPath && (title || brand !== 'Unknown' || isMakeupPage || isApparelPage)) hasData = true;
+    if (!hasData && (title || brand !== 'Unknown' || treatAsMakeup || isApparelPage)) hasData = true;
     if (!hasData) return null;
-    var category = isApparelPage ? 'apparel' : ((isMakeupPage || shades.length) ? 'makeup' : 'apparel');
+    var category = isApparelPage ? 'apparel' : ((treatAsMakeup || shades.length) ? 'makeup' : 'apparel');
     var productType = category === 'makeup' ? (/\blip\b/i.test(title) ? 'lipstick' : 'makeup') : 'apparel';
     var sendShades = category === 'makeup' && shades.length ? shades : undefined;
     return {
@@ -228,7 +273,15 @@
             return;
           }
           if (!data.recommended_size && !data.recommended_shade) {
-            errEl.textContent = data.message || 'No recommendation returned. Add a face photo in the extension for shade recommendations.';
+            var noRecMsg = data.message;
+            if (!noRecMsg) {
+              if (ctx && ctx.category === 'makeup') {
+                noRecMsg = (!ctx.shades || !ctx.shades.length) ? 'Shade options weren\'t found on this page. Scroll to the Colour/Shade selector, then click Get recommendation again.' : 'No shade recommendation. Add a face photo in the extension popup (Analyze and save skin profile) for shade recommendations.';
+              } else {
+                noRecMsg = 'No size recommendation. Size chart or reviews weren\'t found for this product.';
+              }
+            }
+            errEl.textContent = noRecMsg;
             return;
           }
           resultEl.style.display = 'block';
@@ -270,8 +323,18 @@
     injectPanel();
   }
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', maybeInject);
+    document.addEventListener('DOMContentLoaded', function () {
+      maybeInject();
+      var host = window.location.hostname.replace(/^www\./, '');
+      if ((host === 'amazon.in' || host.endsWith('.amazon.in')) && /\/dp\//.test(window.location.pathname || '') && !document.getElementById('fitright-panel')) {
+        setTimeout(maybeInject, 2000);
+      }
+    });
   } else {
     maybeInject();
+    var host = window.location.hostname.replace(/^www\./, '');
+    if ((host === 'amazon.in' || host.endsWith('.amazon.in')) && /\/dp\//.test(window.location.pathname || '') && !document.getElementById('fitright-panel')) {
+      setTimeout(maybeInject, 2000);
+    }
   }
 })();
